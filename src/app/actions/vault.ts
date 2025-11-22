@@ -46,3 +46,23 @@ export async function addBookNote(bookId: string, content: string) {
   return note;
 }
 
+export async function addBook(data: {
+  title: string;
+  author: string;
+  coverUrl: string;
+  totalPages: number;
+}) {
+  const book = await prisma.book.create({
+    data: {
+      title: data.title.trim(),
+      author: data.author.trim(),
+      coverUrl: data.coverUrl.trim(),
+      totalPages: data.totalPages,
+      status: "READING",
+    },
+  });
+
+  revalidatePath("/");
+  return book;
+}
+

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { VaultBookCard } from "@/components/dashboard/VaultBookCard";
+import { AddBookDialog } from "@/components/dashboard/AddBookDialog";
 import { Progress } from "@/components/ui/progress";
 
 const bentoShell =
@@ -43,9 +44,12 @@ export default async function TabVault() {
               Tap any cover to open notes, track progress, and capture insights.
             </p>
           </div>
-          <span className="rounded-full border border-white/10 px-4 py-1 text-xs uppercase tracking-[0.35em] text-slate-400">
-            {books.length} Volumes
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="rounded-full border border-white/10 px-4 py-1 text-xs uppercase tracking-[0.35em] text-slate-400">
+              {books.length} Volumes
+            </span>
+            <AddBookDialog />
+          </div>
         </div>
 
         <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">

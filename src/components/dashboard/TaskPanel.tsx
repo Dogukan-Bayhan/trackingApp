@@ -105,6 +105,7 @@ export function TaskPanel({ initialTasks, type, title }: TaskPanelProps) {
       priority,
       isCompleted: false,
       createdAt: new Date(),
+      completedAt: null,
     };
     applyOptimistic({ type: "add", task: optimisticTask });
     setText("");

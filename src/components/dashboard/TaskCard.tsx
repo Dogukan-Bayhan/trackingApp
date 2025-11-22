@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Task } from "@prisma/client";
-import { Check, Trash2 } from "lucide-react";
+import { Check, Circle, Trash2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -79,40 +79,78 @@ export function TaskCard({ task, onToggle, onDelete }: TaskCardProps) {
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
       className={cn(
-        "group relative overflow-hidden rounded-3xl border border-white/5 bg-slate-900/60 p-4 backdrop-blur-xl",
+        "group relative overflow-hidden rounded-3xl border border-white/5 bg-slate-900/60 p-4 backdrop-blur-xl transition-all",
         "before:absolute before:inset-0 before:bg-gradient-to-br before:opacity-0 before:transition-opacity before:duration-300 group-hover:before:opacity-70",
         categoryToken.accent,
-        categoryToken.glow
+        categoryToken.glow,
+        task.isCompleted && "opacity-50"
       )}
     >
       <div className="flex items-start gap-3">
-        <button
+        <motion.button
           type="button"
           onClick={() => onToggle(task.id)}
-          aria-label="Toggle task"
+          aria-label={task.isCompleted ? "Mark as incomplete" : "Mark as complete"}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           className={cn(
-            "mt-1 flex size-10 items-center justify-center rounded-2xl border border-white/10 bg-slate-900/60 text-xl transition-colors",
+            "relative mt-1 flex size-11 shrink-0 items-center justify-center rounded-full border-2 transition-all",
             task.isCompleted
-              ? "border-emerald-400/60 bg-emerald-500/20 text-emerald-100"
-              : "text-slate-400"
+              ? "border-emerald-400/80 bg-emerald-500/30 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+              : "border-white/30 bg-slate-900/60 text-slate-400 hover:border-white/50 hover:bg-slate-800/60"
           )}
         >
-          {task.isCompleted ? <Check className="size-5" /> : categoryToken.emoji}
-        </button>
+          <AnimatePresence mode="wait">
+            {task.isCompleted ? (
+              <motion.div
+                key="check"
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                exit={{ scale: 0, rotate: 180 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 30,
+                }}
+              >
+                <Check className="size-5" strokeWidth={3} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="circle"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Circle className="size-5" strokeWidth={2.5} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.button>
 
         <div className="flex-1 space-y-3">
-          <div>
+          <div className="flex-1">
             <p
               className={cn(
-                "text-base font-semibold tracking-tight text-slate-50 transition-colors",
-                task.isCompleted && "text-slate-500 line-through"
+                "text-base font-semibold tracking-tight transition-all",
+                task.isCompleted
+                  ? "text-muted-foreground line-through opacity-60"
+                  : "text-slate-50"
               )}
             >
               {task.title}
             </p>
-            <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
-              {categoryToken.label}
-            </p>
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              <span className="text-xs uppercase tracking-[0.25em] text-slate-400">
+                {categoryToken.label}
+              </span>
+              {task.isCompleted && (
+                <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-300">
+                  COMPLETED
+                </span>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
@@ -134,13 +172,18 @@ export function TaskCard({ task, onToggle, onDelete }: TaskCardProps) {
         </div>
 
         <motion.button
-          whileTap={{ scale: 0.92 }}
           type="button"
           aria-label="Delete task"
-          onClick={() => onDelete(task.id)}
-          className="rounded-2xl border border-white/10 bg-white/5 p-2 text-slate-400 transition-colors hover:border-rose-500/40 hover:text-rose-200"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onDelete(task.id);
+          }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="mt-1 shrink-0 rounded-full border border-white/10 bg-white/5 p-2.5 text-slate-400 transition-colors hover:border-red-500/60 hover:bg-red-500/20 hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500/50"
         >
-          <Trash2 className="size-4" />
+          <Trash2 className="size-4" strokeWidth={2.5} />
         </motion.button>
       </div>
     </motion.article>

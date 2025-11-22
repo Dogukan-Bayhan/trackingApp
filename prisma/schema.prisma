@@ -8,13 +8,14 @@ datasource db {
 }
 
 model Task {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
-  isCompleted Boolean  @default(false)
-  type        String   // "TODAY", "TOMORROW", "WEEK"
-  category    String   @default("PROJECT") // "PROJECT","LEETCODE","SPORT","STUDY"
-  priority    String   @default("MEDIUM")  // "LOW","MEDIUM","HIGH"
-  createdAt   DateTime @default(now())
+  isCompleted Boolean   @default(false)
+  type        String    // "TODAY", "TOMORROW", "WEEK"
+  category    String    @default("PROJECT") // "PROJECT","LEETCODE","SPORT","STUDY"
+  priority    String    @default("MEDIUM")  // "LOW","MEDIUM","HIGH"
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
 }
 
 model Book {
@@ -70,4 +71,12 @@ model KnowledgeBase {
   progress Int    @default(0)
 
   @@map("knowledge_base")
+}
+
+model UserActivityLog {
+  id        String   @id @default(uuid())
+  date      DateTime @unique
+  createdAt DateTime @default(now())
+
+  @@map("user_activity_log")
 }

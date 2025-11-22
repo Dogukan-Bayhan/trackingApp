@@ -30,6 +30,7 @@ export const tasks = sqliteTable("Task", {
   createdAt: text("createdAt")
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
+  completedAt: text("completedAt"),
 });
 
 export const leetcodeMetrics = sqliteTable("leetcode_metrics", {
@@ -48,5 +49,13 @@ export const knowledgeBase = sqliteTable("knowledge_base", {
   coverUrl: text("coverUrl"),
   notes: text("notes"),
   progress: integer("progress").notNull().default(0),
+});
+
+export const userActivityLog = sqliteTable("user_activity_log", {
+  id: text("id").primaryKey().notNull(),
+  date: text("date").notNull().unique(),
+  createdAt: text("createdAt")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
 });
 
