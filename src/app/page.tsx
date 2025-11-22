@@ -1,65 +1,105 @@
-import Image from "next/image";
+import type { ComponentProps } from "react";
+import { format } from "date-fns";
+
+import TabLeetCode from "@/components/dashboard/TabLeetCode";
+import TabToday from "@/components/dashboard/TabToday";
+import TabTomorrow from "@/components/dashboard/TabTomorrow";
+import TabVault from "@/components/dashboard/TabVault";
+import TabWeek from "@/components/dashboard/TabWeek";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
+  const todayLabel = format(new Date(), "MMMM d, yyyy");
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="relative min-h-screen overflow-hidden bg-[#030712] px-4 py-14 text-white">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.18),_transparent_55%)]" />
+        <div className="absolute right-10 top-32 h-72 w-72 rounded-full bg-cyan-500/10 blur-[120px]" />
+        <div className="absolute left-10 top-1/2 h-72 w-72 rounded-full bg-purple-500/10 blur-[120px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-10">
+        <header className="space-y-4">
+          <p className="text-sm uppercase tracking-[0.6em] text-slate-400">
+            Gamified Life OS
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+                Deep Focus Command Center
+              </h1>
+              <p className="mt-2 text-base text-slate-400">
+                {todayLabel} &middot; Craft rituals, attack sprints, archive
+                mastery.
+              </p>
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-slate-200 shadow-[0_20px_60px_rgba(15,23,42,0.6)]">
+              <span className="text-xs uppercase tracking-[0.4em] text-slate-400">
+                Current Streak
+              </span>
+              <p className="text-2xl font-semibold text-emerald-300">7 days 🔥</p>
+            </div>
+          </div>
+        </header>
+
+        <Tabs defaultValue="today" className="space-y-8">
+          <TabsList className="flex flex-wrap items-center justify-center gap-4 rounded-[32px] border border-white/10 bg-white/10 p-3 text-sm font-medium backdrop-blur-xl">
+            <StyledTrigger value="today" gradient="from-amber-500/30 to-orange-500/10">
+              Today
+            </StyledTrigger>
+            <StyledTrigger value="tomorrow" gradient="from-sky-500/20 to-indigo-500/10">
+              Tomorrow
+            </StyledTrigger>
+            <StyledTrigger value="week" gradient="from-emerald-500/25 to-lime-500/10">
+              This Week
+            </StyledTrigger>
+            <StyledTrigger value="leetcode" gradient="from-orange-400/30 to-amber-300/10">
+              LeetCode
+            </StyledTrigger>
+            <StyledTrigger value="vault" gradient="from-cyan-500/25 to-violet-500/15">
+              The Vault
+            </StyledTrigger>
+          </TabsList>
+
+          <TabsContent value="today">
+            <TabToday />
+          </TabsContent>
+          <TabsContent value="tomorrow">
+            <TabTomorrow />
+          </TabsContent>
+          <TabsContent value="week">
+            <TabWeek />
+          </TabsContent>
+          <TabsContent value="leetcode">
+            <TabLeetCode />
+          </TabsContent>
+          <TabsContent value="vault">
+            <TabVault />
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
+  );
+}
+
+interface StyledTriggerProps
+  extends ComponentProps<typeof TabsTrigger> {
+  gradient: string;
+}
+
+function StyledTrigger({ gradient, children, ...props }: StyledTriggerProps) {
+  return (
+    <TabsTrigger
+      {...props}
+      className={cn(
+        "rounded-2xl border border-transparent px-4 py-2 text-slate-300 transition data-[state=active]:text-white",
+        "data-[state=active]:border-white/20 data-[state=active]:shadow-[0_20px_40px_rgba(0,0,0,0.45)]",
+        `data-[state=active]:bg-gradient-to-r ${gradient}`
+      )}
+    >
+      {children}
+    </TabsTrigger>
   );
 }

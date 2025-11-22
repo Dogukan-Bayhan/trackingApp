@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  title       String
+  isCompleted Boolean  @default(false)
+  type        String   // "TODAY", "TOMORROW", "WEEK"
+  category    String   @default("PROJECT") // "PROJECT","LEETCODE","SPORT","STUDY"
+  priority    String   @default("MEDIUM")  // "LOW","MEDIUM","HIGH"
+  createdAt   DateTime @default(now())
+}
+
+model Book {
+  id          String   @id @default(uuid())
+  title       String
+  author      String
+  coverUrl    String
+  totalPages  Int
+  currentPage Int      @default(0)
+  status      String   // "READING", "FINISHED", "WANT_TO_READ"
+  notes       Note[]
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  content   String
+  bookId    String
+  book      Book     @relation(fields: [bookId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  tags        String   // Comma separated tags
+  progress    Int      @default(0)
+}
+
+model Topic {
+  id     String @id @default(uuid())
+  name   String
+  status String // "LEARNING", "MASTERED"
+}
+
+model LeetcodeMetric {
+  id              String @id @default(uuid())
+  topicName       String
+  totalProblems   Int
+  solvedProblems  Int     @default(0)
+  difficultyLevel String
+
+  @@map("leetcode_metrics")
+}
+
+model KnowledgeBase {
+  id       String @id @default(uuid())
+  title    String
+  type     String // "BOOK" | "EXPERIMENT"
+  status   String
+  coverUrl String?
+  notes    String?
+  progress Int    @default(0)
+
+  @@map("knowledge_base")
+}
